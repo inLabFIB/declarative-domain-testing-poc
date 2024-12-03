@@ -1,0 +1,195 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ----- RELATION CARDINALITIES ----- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@CAR_Publication_books_at_most_1 :- Publication_books(rel), CollectionElement(rel,rp1,_), CollectionElement(rel,rp2,_), rp1<>rp2
+@CAR_EditedBook_conferenceEditions_at_most_1 :- EditedBook_conferenceEditions(rel), CollectionElement(rel,rp1,_), CollectionElement(rel,rp2,_), rp1<>rp2
+@CAR_EditedBook_bookChapters_at_least_1 :- EditedBook_bookChapters(rel), not(collectionHasAtLeastOneElement(rel))
+@CAR_EditedBook_editors_at_least_1 :- EditedBook_editors(rel), not(collectionHasAtLeastOneElement(rel))
+@CAR_AuthoredPublication_authors_at_least_1 :- AuthoredPublication_authors(rel), not(collectionHasAtLeastOneElement(rel))
+@CAR_BookChapter_bookSections_at_most_1 :- BookChapter_bookSections(rel), CollectionElement(rel,rp1,_), CollectionElement(rel,rp2,_), rp1<>rp2
+@CAR_BookChapter_editedBooks_at_most_1 :- BookChapter_editedBooks(rel), CollectionElement(rel,rp1,_), CollectionElement(rel,rp2,_), rp1<>rp2
+@CAR_BookChapter_bookSeriesIssues_at_most_1 :- BookChapter_bookSeriesIssues(rel), CollectionElement(rel,rp1,_), CollectionElement(rel,rp2,_), rp1<>rp2
+@CAR_JournalPaper_journalSections_at_most_1 :- JournalPaper_journalSections(rel), CollectionElement(rel,rp1,_), CollectionElement(rel,rp2,_), rp1<>rp2
+@CAR_Book_homePages_at_most_1 :- Book_homePages(rel), CollectionElement(rel,rp1,_), CollectionElement(rel,rp2,_), rp1<>rp2
+@CAR_BookSeriesIssue_bookChapters_at_least_1 :- BookSeriesIssue_bookChapters(rel), not(collectionHasAtLeastOneElement(rel))
+@CAR_BookSeriesIssue_conferenceEditions_at_most_1 :- BookSeriesIssue_conferenceEditions(rel), CollectionElement(rel,rp1,_), CollectionElement(rel,rp2,_), rp1<>rp2
+@CAR_Person_homePages_at_most_1 :- Person_homePages(rel), CollectionElement(rel,rp1,_), CollectionElement(rel,rp2,_), rp1<>rp2
+%% Person_editedBooks
+%% Person_authoredPublications
+@CAR_BookSection_bookChapters_at_least_1 :- BookSection_bookChapters(rel), not(collectionHasAtLeastOneElement(rel))
+@CAR_JournalSection_journalPapers_at_least_1 :- JournalSection_journalPapers(rel), not(collectionHasAtLeastOneElement(rel))
+@CAR_ConferenceEdition_homePages_at_most_1 :- ConferenceEdition_homePages(rel), CollectionElement(rel,rp1,_), CollectionElement(rel,rp2,_), rp1<>rp2
+@CAR_ConferenceEdition_editedBooks_at_most_1 :- ConferenceEdition_editedBooks(rel), CollectionElement(rel,rp1,_), CollectionElement(rel,rp2,_), rp1<>rp2
+@CAR_ConferenceEdition_bookSeriesIssues_at_most_1 :- ConferenceEdition_bookSeriesIssues(rel), CollectionElement(rel,rp1,_), CollectionElement(rel,rp2,_), rp1<>rp2
+@CAR_ConferenceEdition_journalIssues_at_most_1 :- ConferenceEdition_journalIssues(rel), CollectionElement(rel,rp1,_), CollectionElement(rel,rp2,_), rp1<>rp2
+@CAR_JournalIssue_months_at_most_1 :- JournalIssue_months(rel), CollectionElement(rel,rp1,_), CollectionElement(rel,rp2,_), rp1<>rp2
+@CAR_JournalIssue_journalPapers_at_least_1 :- JournalIssue_journalPapers(rel), not(collectionHasAtLeastOneElement(rel))
+@CAR_JournalIssue_conferenceEditions_at_most_1 :- JournalIssue_conferenceEditions(rel), CollectionElement(rel,rp1,_), CollectionElement(rel,rp2,_), rp1<>rp2
+%% JournalVolume_journalIssues
+%% Journal_journalVolumes
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ----- RELATION CARDINALITIES OF DERIVED RELATIONS ----- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@DER_CAR_Person_publications_at_least_1 :- Person(p,_,_,ebs,aps), not(collectionHasAtLeastOneElement(ebs)), not(collectionHasAtLeastOneElement(aps))
+
+%%@DER_CAR_Publication_persons_at_least_1 %NOT NEEDED, IS REDUNDANT WITH EditedBook AND AuthoredPublication CARDINALITY RULES
+
+@DER_CAR_JournalSection_journalIssues_exactly_1 :- JournalSection(oid,_,_,jps), CollectionElement(jps,_,jp1), CollectionElement(jps,_,jp2), JournalPaper(jp1,_,_,_,ji1), JournalPaper(jp2,_,_,_,ji2), ji1<>ji2
+
+@DER_CAR_BookSection_editedBooks_at_most_1 :- BookSection(bs,_,_,bcs), CollectionElement(bcs,_,bc1), CollectionElement(bcs,_,bc2), BookChapter(bc1,_,_,_,ebs1,_), BookChapter(bc2,_,_,_,ebs2,_), CollectionElement(ebs1,_,eb1), CollectionElement(ebs2,_,eb2), eb1<>eb2
+
+@DER_CAR_BookSection_bookSeriesIssues_at_most_1 :- BookSection(bs,_,_,bcs), CollectionElement(bcs,_,bc1), CollectionElement(bcs,_,bc2), BookChapter(bc1,_,_,_,_,bsis1), BookChapter(bc2,_,_,_,_,bsis2), CollectionElement(bsis1,_,bsi1), CollectionElement(bsis2,_,bsi2), bsi1<>bsi2
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ----- PRIMARY KEYS ----- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@PK1_Person_name :- Person(oid1,name,_,_,_), Person(oid2,name,_,_,_), oid1<>oid2
+@PK2_Book_isbn :- Book(oid1,_,_,_,_,isbn,_), Book(oid2,_,_,_,_,isbn,_), oid1<>oid2
+@PK3_BookSeries_id :- BookSeries(oid1,id,_), BookSeries(oid2,id,_), oid1<>oid2
+@PK4_BookSeriesIssue_number_bookSeries :- BookSeriesIssue(oid1,number,_,bookSeries,_), BookSeriesIssue(oid2,number,_,bookSeries,_), oid1<>oid2
+@PK5_Journal_title :- Journal(oid1,title,_,_), Journal(oid2,title,_,_), oid1<>oid2
+@PK6_Journal_issn :- Journal(oid1,_,issn,_), Journal(oid2,_,issn,_), oid1<>oid2
+@PK7_JournalVolume_volume_journal :- JournalVolume(oid1,volume,_,_,journal), JournalVolume(oid2,volume,_,_,journal), oid1<>oid2
+@PK8_JournalIssue_journalVolume_number :- JournalIssue(oid1,number,_,_,_,journalVolume,_), JournalIssue(oid2,number,_,_,_,journalVolume,_), oid1<>oid2
+% PK9 Assumes that all JournalSection papers are form the same Issue
+@PK9_JournalSection_journalIssue_title :- JournalSection(oid1,title,_,jp1), CollectionElement(jps1,_,jp1), JournalPaper(jp1,_,_,_,ji), JournalSection(oid2,title,_,jp2), CollectionElement(jps2,_,jp2), JournalPaper(jp2,_,_,_,ji), oid1<>oid2
+@PK10_ConferenceSeries_name :- ConferenceSeries(oid1,_,name), ConferenceSeries(oid2,_,name), oid1<>oid2
+@PK11_ConferenceEdition_title :- ConferenceEdition(oid1,title,_,_,_,_,_,_,_,_), ConferenceEdition(oid2,title,_,_,_,_,_,_,_,_), oid1<>oid2
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ----- OTHER INTEGRITY CONSTRAINTS ----- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@BR1_BookChapter_endPage_GEQ_iniPage :- BookChapter(_,iniPage,endPage,_,_,_), iniPage>endPage
+@BR2_JournalPaper_endPage_GEQ_iniPage :- JournalPaper(_,iniPage,endPage,_,_), iniPage>endPage
+@BR3_JournalIssue_journalPapers_noOverlap :- JournalIssue(_,_,_,_,jp,_,_), CollectionElement(jp,_,jp1), CollectionElement(jp,_,jp2), jp1<>jp2, not(journalPaperPagesDontOverlap(jp1,jp2))
+@BR4_EditedBook_bookChapters_noOverlap :- EditedBook(_,_,bc,_), CollectionElement(bc,_,bc1), CollectionElement(bc,_,bc2), bc1<>bc2, not(journalPaperPagesDontOverlap(bc1,bc2))
+@BR5_BookSeriesIssue_bookChapters_noOverlap :- BookSeriesIssue(_,_,bc,_,_), CollectionElement(bc,_,bc1), CollectionElement(bc,_,bc2), bc1<>bc2, not(journalPaperPagesDontOverlap(bc1,bc2))
+
+%% PROBLEM WITH BR6 -> implies consecutive ordering, this can not be expressed in logic!!
+@BR6_JournalVolume_volume_GEQ_one :- JournalVolume(_,volume,_,_,_), volume<1
+
+@BR7_EditedBook_IfInConferenceEdition_year_EG_thatOfTheConference :- EditedBook(eb,ces,_,_), Publication(eb,_,bs), CollectionElement(bs,_,b), Book(b,_,_,_,eb_year,_,_), CollectionElement(ces,_,ce), ConferenceEdition(_,_,ce_year,_,_,_,_,_,_,_), eb_year < ce_year
+@BR8_BookSeriesIssue_IfInConferenceEdition_year_EG_thatOfTheConference :- BookSeriesIssue(bsi,_,_,_,ces), Book(bsi,_,_,_,bsi_year,_,_), CollectionElement(ces,_,ce), ConferenceEdition(_,_,ce_year,_,_,_,_,_,_,_), bsi_year < ce_year
+@BR9_JournalIssue_IfInConferenceEdition_year_EG_thatOfTheConference :- JournalIssue(_,_,ji_year,_,_,_,ces), CollectionElement(ces,_,ce), ConferenceEdition(_,_,ce_year,_,_,_,_,_,_,_), ji_year < ce_year
+@BR10_EditedBook_cannotHaveBookSectionWithSameTitle :- EditedBook(_,_,bcs,_), CollectionElement(bcs,_,bc1), CollectionElement(bcs,_,bc2), BookChapter(bc1,_,_,bss1,_,_), BookChapter(bc1,_,_,bss2,_,_), CollectionElement(bss1,_,bs1), CollectionElement(bss2,_,bs2), BookSection(bs1,title,_,_), BookSection(bs2,title,_,_), bs1<>bs2
+@BR11_BookSeriesIssue_cannotHaveBookSectionWithSameTitle :- BookSeriesIssue(_,_,bcs,_,_), CollectionElement(bcs,_,bc1), CollectionElement(bcs,_,bc2), BookChapter(bc1,_,_,bss1,_,_), BookChapter(bc1,_,_,bss2,_,_), CollectionElement(bss1,_,bs1), CollectionElement(bss2,_,bs2), BookSection(bs1,title,_,_), BookSection(bs2,title,_,_), bs1<>bs2
+@BR12_JournalSection_cannotHaveJournalPapersWithSameTitle :- JournalSection(_,_,_,jps), CollectionElement(jps,_,jp1), CollectionElement(jps,_,jp2), Publication(jp1,title,_), Publication(jp2,title,_), jp1<>jp2
+@BR13_BookSection_cannotHaveBookChaptersWithSameTitle :- BookSection(_,_,_,bcs), CollectionElement(bcs,_,bc1), CollectionElement(bcs,_,bc2), Publication(bc1,title,_), Publication(bc2,title,_), bc1<>bc2
+@BR14_ConferenceEdition_mustHaveEditedBook_orBookSeriesIssue_orJournalIssue :- ConferenceEdition(_,_,_,_,_,_,ebs,bsis,jis,_), not(collectionHasAtLeastOneElement(ebs)), not(collectionHasAtLeastOneElement(bsis)), not(collectionHasAtLeastOneElement(jis))
+@BR15_BookSeriesIssue_samePublisherAsBookSeries :- BookSeriesIssue(bsi,_,_,bs,_), Book(bsi,_,_,bsi_publisher,_,_,_), BookSeries(bs,_,bs_publisher), bsi_publisher<>bs_publisher
+
+journalPaperPagesDontOverlap(jp1,jp2) :- JournalPaper(jp1,iniPage1,endPage1,_,_), JournalPaper(jp2,iniPage2,endPage2,_,_), iniPage1>endPage2
+journalPaperPagesDontOverlap(jp1,jp2) :- JournalPaper(jp1,iniPage1,endPage1,_,_), JournalPaper(jp2,iniPage2,endPage2,_,_), iniPage2>endPage1
+
+bookChapterPagesDontOverlap(bc1,bc2) :- BookChapter(bc1,iniPage1,endPage1,_,_,_), BookChapter(bc2,iniPage2,endPage2,_,_,_), iniPage1>endPage2
+bookChapterPagesDontOverlap(bc1,bc2) :- BookChapter(bc1,iniPage1,endPage1,_,_,_), BookChapter(bc2,iniPage2,endPage2,_,_,_), iniPage2>endPage1
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ----- UML IMPLICIT RELATION CONSTRAINTS ----- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Should have rules for each double navigability of the schema!
+
+%% Publication (publication) 1 <--> * (books) Book
+@DNAV_Publication_Book :- Publication(p1,_,bs), CollectionElement(bs,_,b), Book(b,_,_,_,_,_,p2), p1<>p2
+@DNAV_Book_Publication :- Book(b,_,_,_,_,_,p), Publication(p,_,bs), not(collectionHas(bs,b))
+
+%% EditedBook (editedBooks) * <--> * (conferenceEditions) ConferenceEdition
+@DNAV_EditedBook_ConferenceEdition :- EditedBook(eb,ces,_,_), CollectionElement(ces,_,ce), ConferenceEdition(ce,_,_,_,_,_,ebs,_,_,_), not(collectionHas(ebs,eb))
+@DNAV_ConferenceEdition_EditedBook :- ConferenceEdition(ce,_,_,_,_,_,ebs,_,_,_), CollectionElement(ebs,_,eb), EditedBook(eb,ces,_,_), not(collectionHas(ces,ce))
+
+%% EditedBook (editedBooks) * <--> * (bookChapters) BookChapter
+@DNAV_EditedBook_BookChapter :- EditedBook(eb,_,bcs,_), CollectionElement(bcs,_,bc), BookChapter(bc,_,_,_,ebs,_), not(collectionHas(ebs,eb))
+@DNAV_BookChapter_EditedBook :- BookChapter(bc,_,_,_,ebs,_), CollectionElement(ebs,_,eb), EditedBook(eb,_,bcs,_), not(collectionHas(bcs,bc))
+
+%% EditedBook (editedBooks) * <--> * (editors) Person
+@DNAV_EditedBook_Person :- EditedBook(eb,_,_,es), CollectionElement(es,_,e), Person(e,_,_,ebs,_), not(collectionHas(ebs,eb))
+@DNAV_Person_EditedBook :- Person(e,_,_,ebs,_), CollectionElement(ebs,_,eb), EditedBook(eb,_,_,es), not(collectionHas(es,e))
+
+%% AuthoredPublication (authoredPublications) * <--> * (authors) Person
+@DNAV_AuthoredPublication_Person :- AuthoredPublication(ap,as), CollectionElement(as,_,a), Person(a,_,_,_,aps), not(collectionHas(aps,ap))
+@DNAV_Person_AuthoredPublication :- Person(a,_,_,_,aps), CollectionElement(aps,_,ap), AuthoredPublication(ap,as), not(collectionHas(as,a))
+
+%% BookChapter (bookChapters) * <--> * (bookSections) BookSection
+@DNAV_BookChapter_BookSection :- BookChapter(bc,_,_,bss,_,_), CollectionElement(bss,_,bs), BookSection(bs,_,_,bcs), not(collectionHas(bcs,bc))
+@DNAV_BookSection_BookChapter :- BookSection(bs,_,_,bcs), CollectionElement(bcs,_,bc), BookChapter(bc,_,_,bss,_,_), not(collectionHas(bss,bs))
+
+%% BookChapter (bookChapters) * <--> * (bookSeriesIssue) BookSeriesIssue
+@DNAV_BookChapter_BookSeriesIssue :- BookChapter(bc,_,_,_,_,bsis), CollectionElement(bsis,_,bsi), BookSeriesIssue(bsi,_,bcs,_,_), not(collectionHas(bcs,bc))
+@DNAV_BookSeriesIssue_BookChapter :- BookSeriesIssue(bsi,_,bcs,_,_), CollectionElement(bcs,_,bc), BookChapter(bc,_,_,_,_,bsis), not(collectionHas(bsis,bsi))
+
+%% JournalPaper (journalPapers) * <--> * (journalSections) JournalSection
+@DNAV_JournalPaper_JournalSection :- JournalPaper(jp,_,_,jss,_), CollectionElement(jss,_,js), JournalSection(js,_,_,jps), not(collectionHas(jps,jp))
+@DNAV_JournalSection_JournalPaper :- JournalSection(js,_,_,jps), CollectionElement(jps,_,jp), JournalPaper(jp,_,_,jss,_), not(collectionHas(jss,js))
+
+%% JournalPaper (journalPapers) * <--> 1 (journalIssue) JournalIssue
+@DNAV_JournalIssue_JournalPaper :- JournalIssue(ji1,_,_,_,jps,_,_), CollectionElement(jps,_,jp), JournalPaper(jp,_,_,_,ji2), ji1<>ji2
+@DNAV_JournalPaper_JournalIssue :- JournalPaper(jp,_,_,_,ji), JournalIssue(ji,_,_,_,jps,_,_), not(collectionHas(jps,jp))
+
+%% Book 0..1 --> * (homePages) HomePages -- NO DOUBLE NAVIGABILITY --> NOT NEEDED
+
+%% BookSeriesIssue (bookSeriesIssues) * <--> * (conferenceEditions) ConferenceEdition
+@DNAV_BookSeriesIssue_ConferenceEdition :- BookSeriesIssue(bsi,_,_,_,ces), CollectionElement(ces,_,ce), ConferenceEdition(ce,_,_,_,_,_,_,bsis,_,_), not(collectionHas(bsis,bsi))
+@DNAV_ConferenceEdition_BookSeriesIssue :- ConferenceEdition(ce,_,_,_,_,_,_,bsis,_,_), CollectionElement(bsis,_,bsi), BookSeriesIssue(bsi,_,_,_,ces), not(collectionHas(ces,ce))
+
+%% BookSeriesIssue * --> 1 (bookSeries) BookSeries -- NO DOUBLE NAVIGABILITY --> NOT NEEDED
+%% Person 0..1 --> * (homePages) HomePages -- NO DOUBLE NAVIGABILITY --> NOT NEEDED
+%% ConferenceEdition 0..1 --> * (homePages) HomePages -- NO DOUBLE NAVIGABILITY --> NOT NEEDED
+
+%% ConferenceEdition (conferenceEditions) * <--> * (journalIssues) JournalIssue
+@DNAV_ConferenceEdition_JournalIssue :- ConferenceEdition(ce,_,_,_,_,_,_,_,jis,_), CollectionElement(jis,_,ji), JournalIssue(ji,_,_,_,_,_,ces), not(collectionHas(ces,ce))
+@DNAV_JournalIssue_ConferenceEdition :- JournalIssue(ji,_,_,_,_,_,ces), CollectionElement(ces,_,ce), ConferenceEdition(ce,_,_,_,_,_,_,_,jis,_), not(collectionHas(jis,ji))
+
+%% ConferenceEdition * --> 1 (conferenceSeries) ConferenceSeries -- NO DOUBLE NAVIGABILITY --> NOT NEEDED
+%% JournalIssue 0..1 --> * (month) Month -- NO DOUBLE NAVIGABILITY --> NOT NEEDED
+
+%% JournalIssue (journalIssues) * <--> 1 (journalVolume) JournalVolume
+@DNAV_JournalVolume_JournalIssue :- JournalVolume(jv1,_,_,jis,_), CollectionElement(jis,_,ji), JournalIssue(ji,_,_,_,_,jv2,_), jv1<>jv2
+@DNAV_JournalIssue_JournalVolume :- JournalIssue(ji,_,_,_,_,jv,_), JournalVolume(jv,_,_,jis,_), not(collectionHas(jis,ji))
+
+%% JournalVolume (journalVolumes) * <--> 1 (journal) Journal
+@DNAV_Journal_JournalVolume :- Journal(j1,_,_,jvs), CollectionElement(jvs,_,jv), JournalVolume(jv,_,_,_,j2), j1<>j2
+@DNAV_JournalVolume_Journal :- JournalVolume(jv,_,_,_,j), Journal(j,_,_,jvs), not(collectionHas(jvs,jv))
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ----- OTHER ----- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% ----- HomePage linked to only one class -----
+
+@HomePage_associatedToOnlyOneClass1 :- Person(p,_,oid,_,_), Book(b,_,oid,_,_,_,_), HomePage(oid,_)
+@HomePage_associatedToOnlyOneClass2 :- Book(b,_,oid,_,_,_,_), ConferenceEdition(ce,_,_,_,_,oid,_,_,_,_), HomePage(oid,_)
+@HomePage_associatedToOnlyOneClass3 :- ConferenceEdition(ce,_,_,_,_,oid,_,_,_,_), Person(p,_,oid,_,_), HomePage(oid,_)
+
+
+% ----- Publication relation with Book -----
+
+@BR_PublicationHasBookIfInstanceOfEditedBookOrAuthoredBook :- Publication(p,_,bs), collectionHasAtLeastOneElement(bs), not(editedBookOrAuthoredBook(p))
+
+editedBookOrAuthoredBook(oid) :- EditedBook(oid,_,_,_)
+editedBookOrAuthoredBook(oid) :- AuthoredBook(oid)
+
+
+% ----- ConferenceEdition XOR -----
+
+@BR_ConferenceEditionXOR1 :- ConferenceEdition(oid,_,_,_,_,_,eb,bsi,_,_), CollectionElement(eb,_,_), CollectionElement(bsi,_,_)
+@BR_ConferenceEditionXOR2 :- ConferenceEdition(oid,_,_,_,_,_,_,bsi,ji,_), CollectionElement(bsi,_,_), CollectionElement(ji,_,_)
+@BR_ConferenceEditionXOR3 :- ConferenceEdition(oid,_,_,_,_,_,eb,_,ji,_), CollectionElement(eb,_,_), CollectionElement(ji,_,_)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ----- USEFUL DR ----- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+collectionHasAtLeastOneElement(oid) :- CollectionElement(oid,_,_)
+
+collectionHas(collection, element) :- CollectionElement(collection,_,element)

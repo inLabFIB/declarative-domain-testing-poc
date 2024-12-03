@@ -1,0 +1,103 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ----- PREDICATES ----- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Book(_,_,_,_)
+%% Recommendation(_,_,_,_)
+%% Person(_,_,_)
+%% BestSeller(_,_,_,_)
+%% ReadBook(_,_,_,_,_)
+%% ReadBook_recommendations(_)
+
+%% CollectionElement(_,_,_)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ----- UNIQUE OID PER OBJECT CLASS ----- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@UOID_Book1 :- Book(oid,v1,_,_), Book(oid,v2,_,_), v1<>v2
+@UOID_Book2 :- Book(oid,_,v1,_), Book(oid,_,v2,_), v1<>v2
+@UOID_Book3 :- Book(oid,_,_,v1), Book(oid,_,_,v2), v1<>v2
+@UOID_Recommendation1 :- Recommendation(oid,v1,_,_), Recommendation(oid,v2,_,_), v1<>v2
+@UOID_Recommendation2 :- Recommendation(oid,_,v1,_), Recommendation(oid,_,v2,_), v1<>v2
+@UOID_Recommendation3 :- Recommendation(oid,_,_,v1), Recommendation(oid,_,_,v2), v1<>v2
+@UOID_Person1 :- Person(oid,v1,_), Person(oid,v2,_), v1<>v2
+@UOID_Person2 :- Person(oid,_,v1), Person(oid,_,v2), v1<>v2
+@UOID_BestSeller1 :- BestSeller(oid,v1,_,_), BestSeller(oid,v2,_,_), v1<>v2
+@UOID_BestSeller2 :- BestSeller(oid,_,v1,_), BestSeller(oid,_,v2,_), v1<>v2
+@UOID_BestSeller3 :- BestSeller(oid,_,_,v1), BestSeller(oid,_,_,v2), v1<>v2
+@UOID_ReadBook1 :- ReadBook(oid,v1,_,_,_), ReadBook(oid,v2,_,_,_), v1<>v2
+@UOID_ReadBook2 :- ReadBook(oid,_,v1,_,_), ReadBook(oid,_,v2,_,_), v1<>v2
+@UOID_ReadBook3 :- ReadBook(oid,_,_,v1,_), ReadBook(oid,_,_,v2,_), v1<>v2
+@UOID_ReadBook4 :- ReadBook(oid,_,_,_,v1), ReadBook(oid,_,_,_,v2), v1<>v2
+@OUID_CollectionElement :- CollectionElement(oid,rp,e1), CollectionElement(oid,rp,e2), e1<>e2
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ----- UNIQUE OID PER OBJECT ACROSS CLASSES ----- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@UOID_Book_Recommendation :- Book(oid,_,_,_), Recommendation(oid,_,_,_)
+@UOID_Book_Person :- Book(oid,_,_,_), Person(oid,_,_)
+%% @UOID_Book_BestSeller :- Book(oid,_,_,_), BestSeller(oid,_,_,_)
+@UOID_Book_ReadBook :- Book(oid,_,_,_), ReadBook(oid,_,_,_,_)
+@UOID_Book_ReadBook_recommendations :- Book(oid,_,_,_), ReadBook_recommendations(oid)
+
+@UOID_Recommendation_Person :- Recommendation(oid,_,_,_), Person(oid,_,_)
+@UOID_Recommendation_BestSeller :- Recommendation(oid,_,_,_), BestSeller(oid,_,_,_)
+@UOID_Recommendation_ReadBook :- Recommendation(oid,_,_,_), ReadBook(oid,_,_,_,_)
+@UOID_Recommendation_ReadBook_recommendations :- Recommendation(oid,_,_,_), ReadBook_recommendations(oid)
+
+@UOID_Person_BestSeller :- Person(oid,_,_), BestSeller(oid,_,_,_)
+@UOID_Person_ReadBook :- Person(oid,_,_), ReadBook(oid,_,_,_,_)
+@UOID_Person_ReadBook_recommendations :- Person(oid,_,_), ReadBook_recommendations(oid)
+
+@UOID_BestSeller_ReadBook :- BestSeller(oid,_,_,_), ReadBook(oid,_,_,_,_)
+@UOID_BestSeller_ReadBook_recommendations :- BestSeller(oid,_,_,_), ReadBook_recommendations(oid)
+
+@UOID_ReadBook_ReadBook_recommendations :- ReadBook(oid,_,_,_,_), ReadBook_recommendations(oid)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ----- RELATIONS ----- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@REF_Book_author :- Book(oid,_,_,rel), not(oidIsPerson(rel))
+@REF_ReadBook_person :- ReadBook(oid,rel,_,_,_), not(oidIsPerson(rel))
+@REF_ReadBook_book :- ReadBook(oid,_,rel,_,_), not(oidIsBook(rel))
+@REF_ReadBook_recommendations :- ReadBook(oid,_,_,_,rel), not(oidIsReadBook_recommendations(rel))
+@REF_Recommendation_from :- Recommendation(oid,rel,_,_), not(oidIsReadBook(rel))
+@REF_Recommendation_to :- Recommendation(oid,_,rel,_), not(oidIsPerson(rel))
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ----- HIERARCHY ----- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ----- Subclass Is Also Parent -----
+@HRCHY_BestSeller :- BestSeller(oid,_,_,_), not(oidIsBook(oid))
+
+% ----- Abstract Class Is Subclass -----
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ----- COLLECTIONS ----- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ----- Generic -----
+@COLL_CollectionElement_onlyPositiveRelativePositions :- CollectionElement(_,rp,_), rp<0
+
+
+% ----- Specific -----
+@COLL_ReadBook_recommendations_AreRecommendations :- ReadBook_recommendations(oid), CollectionElement(oid,_,element_oid), not(oidIsRecommendation(element_oid))
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ----- COLLECTION ELEMENT UNIQUENESS ----- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@UQ_ReadBook_recommendations :- ReadBook_recommendations(oid), CollectionElement(oid,rp1,element_oid), CollectionElement(oid,rp2,element_oid), rp1<>rp2
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ----- DERIVED PREDICATES ----- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+oidIsBook(oid) :- Book(oid,_,_,_)
+oidIsRecommendation(oid) :- Recommendation(oid,_,_,_)
+oidIsPerson(oid) :- Person(oid,_,_)
+oidIsBestSeller(oid) :- BestSeller(oid,_,_,_)
+oidIsReadBook(oid) :- ReadBook(oid,_,_,_,_)
+oidIsReadBook_recommendations(oid) :- ReadBook_recommendations(oid)

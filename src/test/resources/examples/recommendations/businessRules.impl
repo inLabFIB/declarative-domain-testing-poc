@@ -1,0 +1,19 @@
+% Navigational business rules
+@NavigationalBR1 :- Recommendation(r, rb, _, _), not(appearsInReadBook(rb,r))
+appearsInReadBook(rb,r) :- ReadBook(rb, _, _, _, recSet), ReadBook_recommendations(recSet), CollectionElement(recSet, _, r)
+@NavigationalBR2 :- ReadBook(rb, _, _, _, recSet), ReadBook_recommendations(recSet), CollectionElement(recSet, _, r), not(appearsInRecommendation(r,rb))
+appearsInRecommendation(r,rb) :- Recommendation(r, rb, _, _)
+
+% Primary keys
+@PersonKey :- Person(oid, name, _), Person(oid2, name, _), oid <> oid2
+@BookKey :- Book(oid, title, _, _), Book(oid2, title, _, _), oid <> oid2
+@ReadBookKey :- ReadBook(oid, personOid, bookOid, _, _), ReadBook(oid2, personOid, bookOid, _, _), oid <> oid2
+@RecommendationKey :- Recommendation(oid, readBookOid, personOid, _), Recommendation(oid2, readBookOid, personOid, _), oid<>oid2
+
+% Other business rules
+@OnlyReadOtherAuthors :- ReadBook(_,p,b,_,_), Book(b,_,_,p)
+@CannotRecommendToAuthor :- ReadBook(rb,p,b,year,recSet), Book(b,title,releaseYear,author), Recommendation(r, rb,author, _)
+@CannotRecommendToOneself :- ReadBook(rb,p,_,_,_), Recommendation(_, rb,p, _)
+@CannotReadBeforeRelease :- Book(b,title,releaseYear,author), ReadBook(rb,p,b,readYear,recSet), readYear <= releaseYear
+@CannotReadBeforeBirth :- Person(p,_,birth), ReadBook(_,p,_,readYear,_), readYear <= birth
+@CannotPublishBeforeBirth :- Person(p,_,birth),Book(_,_,release,p), release <= birth
